@@ -15,7 +15,14 @@ const ChooseCardModal = ({ setCardApiId, closeModal, selectCard }) => {
 
     try {
       const response = await fetch(
-        `https://api.pokemontcg.io/v2/cards?q=name:${searchTerm}`
+        `https://api.pokemontcg.io/v2/cards?q=name:${searchTerm}`, 
+        {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'x-Api-Key': "process.env.REACT_APP_API_KEY"
+          }
+      }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch card data");

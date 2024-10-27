@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import "react-toastify/dist/ReactToastify.css";
+import Post from "../../src/components/post/Post";
 const MyPosts = () => {
   const navigate = useNavigate(); // Initialize the navigate function
   // State to hold the posts data
@@ -19,6 +22,8 @@ const MyPosts = () => {
         }
         const data = await response.json();
         setPosts(data); // Set the posts data in the state
+        console.log("posts");
+        console.log(posts);
       } catch (error) {
         setError(error.message); // Set error message if the fetch fails
       } finally {
@@ -43,20 +48,49 @@ const MyPosts = () => {
 
   return (
     <div className="min-h-full h-full">
-      <h1>MY POSTS</h1>
-
-      <button
-        onClick={() => navigate("/createPost")}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column", // Set the flex direction to column
+          alignItems: "flex-start", // Optional: aligns children to the start of the container
+          justifyContent: "flex-start", // Optional: aligns children at the start vertically
+          gap: "1rem",
+        }}
       >
-        Create New Post
-      </button>
+        <h1>MY POSTS</h1>
 
-      <ul>
-        {posts.map((post) => (
-          <li key={post._id}>{post.cardApiId}</li> // Assuming each post has a unique _id and cardName
-        ))}
-      </ul>
+        <button
+          onClick={() => navigate("/createPost")}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Create New Post
+        </button>
+
+        <div
+
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+            width: "650px",
+          }}
+        >
+          {posts.map((post, idx) => {
+            console.log("POST");
+            console.log(post);
+            console.log("POST.WANTSIMGS");
+            console.log(post.wantsImgs);
+            return (
+              <Post
+                key={idx}
+                cardApiId={post.cardApiId}
+                cardFrontPicture={post.cardFrontPicture}
+                wantsImgs={post.wantsImgs}
+              />
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

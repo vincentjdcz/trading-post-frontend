@@ -15,7 +15,7 @@ function App() {
           <Header />
           <Sidebar />
 
-          <div className="ml-64 pt-20 pl-5 w-full h-full min-h-screen">
+          <div className="ml-64 pt-20 pl-5 w-full h-full min-h-screen flex">
             {" "}
             {/* Margin left to avoid overlap with the sidebar and top padding for header */}
             {/* Main content goes here */}
