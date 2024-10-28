@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 //import "./App.css";
 import "/src/App.css";
 //import Header from "./components/header/header";
-import Header from "/src/components/header/header";
+import Header from "/src/components/header/Header";
 
 //import Header from './components/header/Header'
 
