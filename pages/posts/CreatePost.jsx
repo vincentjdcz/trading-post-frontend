@@ -106,8 +106,11 @@ const CreatePosts = () => {
 
       console.log("ABOUT TO CREATE POST, WANTS IMAGES: ");
       console.log(wantsImgs)
+
+      //trading-post-backend-production.up.railway.app
+      //http://localhost:3000
       const response = await fetch(
-        "http://localhost:3000/api/post/createPost",
+        "https://trading-post-backend-production.up.railway.app/api/post/createPost",
         {
           method: "POST",
           headers: {

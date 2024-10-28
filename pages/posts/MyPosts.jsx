@@ -16,7 +16,9 @@ const MyPosts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/post/getPosts");
+        //trading-post-backend-production.up.railway.app
+        //http://localhost:3000
+        const response = await fetch("https://trading-post-backend-production.up.railway.app/api/post/getPosts");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
