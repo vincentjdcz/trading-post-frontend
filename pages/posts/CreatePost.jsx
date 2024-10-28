@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Modal from "react-modal";
-import ChooseCardModal from "../../src/components/modal/ChooseCardModal";
-import CardFillerSkeleton from "../../src/components/skeleton/CardFillerSkeleton";
+//import ChooseCardModal from "../../src/components/modal/ChooseCardModal";
+//import CardFillerSkeleton from "../../src/components/skeleton/CardFillerSkeleton";
+import ChooseCardModal from "/src/components/modal/ChooseCardModal";
+import CardFillerSkeleton from "/src/components/skeleton/CardFillerSkeleton";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
-import Post from "../../src/components/post/Post";
+//import Post from "../../src/components/post/Post";
+import Post from "/src/components/post/Post";
 const MyPosts = () => {
   const navigate = useNavigate(); // Initialize the navigate function
   // State to hold the posts data

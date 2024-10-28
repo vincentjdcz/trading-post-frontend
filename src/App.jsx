@@ -1,12 +1,19 @@
 import { Route, Routes } from "react-router-dom";
-import "./App.css";
-import Header from "./components/header/header";
+//import "./App.css";
+import "/src/App.css";
+//import Header from "./components/header/header";
+import Header from "/src/components/header/header";
 
 //import Header from './components/header/Header'
-import Sidebar from "./components/sidebar/Sidebar";
-import ExplorePosts from "../pages/posts/ExplorePosts";
-import MyPosts from "../pages/posts/MyPosts";
-import CreatePosts from "../pages/posts/CreatePost";
+
+//import Sidebar from "./components/sidebar/Sidebar";
+import Sidebar from "/src/components/sidebar/Sidebar";
+//import ExplorePosts from "../pages/posts/ExplorePosts";
+import ExplorePosts from "/pages/posts/ExplorePosts";
+//import MyPosts from "../pages/posts/MyPosts";
+import MyPosts from "/pages/posts/MyPosts";
+//import CreatePosts from "../pages/posts/CreatePost";
+import CreatePosts from "/pages/posts/CreatePost";
 function App() {
   return (
     <>
