@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSelector } from 'react-redux';
+
 import Modal from "react-modal";
 //import ChooseCardModal from "../../src/components/modal/ChooseCardModal";
 //import CardFillerSkeleton from "../../src/components/skeleton/CardFillerSkeleton";
@@ -21,6 +23,7 @@ const CreatePosts = () => {
   const [wantsModalIsOpen, setWantsModalIsOpen] = useState(false);
   const [cardWantApiId, setCardWantApiId] = useState("");
 
+  const userId = useSelector(state => state.auth.userId);
   const fetchCardImg = async (cardApiId) => {
     try {
       const response = await fetch(
@@ -84,8 +87,9 @@ const CreatePosts = () => {
       if (cardApiId === "") {
         throw new Error("No card selected");
       }
-
+      console.log("Creating Post, userId: ", userId)
       const postData = {
+        userId,
         cardApiId,
         cardFrontPicture,
         cardBackPicture,
@@ -109,7 +113,7 @@ const CreatePosts = () => {
       console.log("ABOUT TO CREATE POST, WANTS IMAGES: ");
       console.log(wantsImgs)
 
-      //trading-post-backend-production.up.railway.app
+      //https://trading-post-backend-production.up.railway.app
       //http://localhost:3000
       const response = await fetch(
         "https://trading-post-backend-production.up.railway.app/api/post/createPost",
@@ -119,6 +123,7 @@ const CreatePosts = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            userId,
             cardApiId,
             cardFrontPicture,
             cardBackPicture,

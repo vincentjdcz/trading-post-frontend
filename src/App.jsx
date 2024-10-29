@@ -14,6 +14,7 @@ import ExplorePosts from "/pages/posts/ExplorePosts";
 import MyPosts from "/pages/posts/MyPosts";
 //import CreatePosts from "../pages/posts/CreatePost";
 import CreatePosts from "/pages/posts/CreatePost";
+import Login from "../pages/auth/Login";
 function App() {
   return (
     <>
@@ -22,7 +23,8 @@ function App() {
           <Header />
           <Sidebar />
 
-          <div className="ml-64 pt-20 pl-5 w-full h-full min-h-screen flex">
+          {/*<div className="ml-64 pt-20 pl-5 w-full h-full min-h-screen flex">*/}
+          <div style={{ marginLeft: '16rem', paddingTop: '6rem', paddingLeft: '1.25rem', width: '100vw', height: '100%', minHeight: '100vh', display: 'flex' }}>
             {" "}
             {/* Margin left to avoid overlap with the sidebar and top padding for header */}
             {/* Main content goes here */}
@@ -31,6 +33,7 @@ function App() {
               <Route path="/explore" element={<ExplorePosts />} />
               <Route path="/my-posts" element={<MyPosts />} />
               <Route path="/createPost" element={<CreatePosts />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </div>
           {/* Other components or content */}

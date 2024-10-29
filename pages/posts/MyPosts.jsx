@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 //import Post from "../../src/components/post/Post";
 import Post from "/src/components/post/Post";
+import { useSelector } from 'react-redux';
 const MyPosts = () => {
   const navigate = useNavigate(); // Initialize the navigate function
   // State to hold the posts data
@@ -12,14 +13,21 @@ const MyPosts = () => {
   const [loading, setLoading] = useState(true);
   // State to handle error
   const [error, setError] = useState(null);
-
+  const userId = useSelector(state => state.auth.userId);
   // useEffect to fetch posts when the component mounts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        //trading-post-backend-production.up.railway.app
+        //https://trading-post-backend-production.up.railway.app
         //http://localhost:3000
-        const response = await fetch("https://trading-post-backend-production.up.railway.app/api/post/getPosts");
+        const response = await fetch("https:trading-post-backend-production.up.railway.app/api/post/getOwnPosts", {
+          method: 'POST', // Use POST method for retrieving own posts
+          credentials: 'include', // Include credentials if you need cookies or authentication
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId }) // Send userId in the request body
+      });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
