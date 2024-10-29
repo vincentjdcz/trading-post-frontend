@@ -20,7 +20,7 @@ const MyPosts = () => {
       try {
         //https://trading-post-backend-production.up.railway.app
         //http://localhost:3000
-        const response = await fetch("https:trading-post-backend-production.up.railway.app/api/post/getOwnPosts", {
+        const response = await fetch("https://trading-post-backend-production.up.railway.app/api/post/getOwnPosts", {
           method: 'POST', // Use POST method for retrieving own posts
           credentials: 'include', // Include credentials if you need cookies or authentication
           headers: {
