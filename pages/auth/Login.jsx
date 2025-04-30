@@ -28,7 +28,7 @@ const Login = () => {
         //https://trading-post-backend-production.up.railway.app
         //http://localhost:3000
         const devURL = "http://localhost:3000";
-        const prodURL = "https://trading-post-backend-production.up.railway.app/api/auth/login"
+        const prodURL = "https://trading-post-backend-production.up.railway.app"
         const response = await fetch(`${isDev ? devURL : prodURL}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
