@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 
-const ChooseCardModal = ({ setCardApiId, closeModal, selectCard }) => {
+const ChooseCardModal = ({ setCardMetaData, closeModal, selectCard }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cardData, setCardData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ const ChooseCardModal = ({ setCardApiId, closeModal, selectCard }) => {
 
     try {
       const response = await fetch(
-        `https://api.pokemontcg.io/v2/cards?q=name:${searchTerm}`, 
+        `https://api.pokemontcg.io/v2/cards?q=name:"${searchTerm}"`, 
         {
           method: 'GET',
           headers: {
@@ -36,10 +36,17 @@ const ChooseCardModal = ({ setCardApiId, closeModal, selectCard }) => {
     }
   };
 
-  const handleCardSelect = (cardId) => {
+  const handleCardSelect = (cardApiId, cardName, setName, setNumber, setTotal, setId) => {
     console.log("Card selected");
-    setCardApiId(cardId); // Call the function passed down from the parent component
-    setSelectedCardId(cardId);
+    console.log("cardApiId: ", cardApiId);
+    console.log("cardName: ", cardName);
+    console.log("setName:", setName);
+    console.log("setNumber", setNumber );
+    console.log("setTotal: ", setTotal);
+    console.log("setId: ", setId);
+    setCardMetaData(cardApiId, cardName, setName, setNumber, setTotal, setId); // Call the function passed down from the parent component
+    setSelectedCardId(cardApiId);
+
   };
 
   return (
@@ -94,7 +101,7 @@ const ChooseCardModal = ({ setCardApiId, closeModal, selectCard }) => {
                   ? "4px solid blue" // Apply yellow border if card is selected
                   : "none", // No border if not selected 
                   }}
-              onClick={() => handleCardSelect(card.id)}
+              onClick={() => handleCardSelect(card.id, card.name, card.set.name, card.number, card.set.total, card.set.id)}
             >
               <img
                 src={card.images.small}
@@ -129,8 +136,9 @@ const ChooseCardModal = ({ setCardApiId, closeModal, selectCard }) => {
 // Add prop types for the component
 ChooseCardModal.propTypes = {
   //onSelectCard: PropTypes.func.isRequired, // Validate onSelectCard as a required function
-  setCardApiId: PropTypes.func.isRequired,
+  setCardMetaData: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
   selectCard: PropTypes.func.isRequred,
+
 };
 export default ChooseCardModal;

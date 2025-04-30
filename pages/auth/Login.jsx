@@ -1,21 +1,35 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "/redux/authSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLogin = async () => {
+  const isDev = false;
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  
+  console.log("isLoggedIn: ", isLoggedIn);
+  useEffect(() => {
+    if (isLoggedIn) {
+      console.log("in if for isloggedin");
+      navigate("/explore");
+    }
+  }, [isLoggedIn, navigate]);
+  const handleLogin = async (event) => {
+    setLoginError("");
     event.preventDefault();
     try {
         console.log("attempting to login");
         //https://trading-post-backend-production.up.railway.app
         //http://localhost:3000
-        const response = await fetch("https://trading-post-backend-production.up.railway.app/api/auth/login", {
+        const devURL = "http://localhost:3000";
+        const prodURL = "https://trading-post-backend-production.up.railway.app/api/auth/login"
+        const response = await fetch(`${isDev ? devURL : prodURL}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -33,11 +47,12 @@ const Login = () => {
         console.log(data);
 
 
-        dispatch(loginSuccess({ userId: data.userId }));
-        navigate("/explore");
+        dispatch(loginSuccess({ userId: data.userId, userName: data.userName, profilePicture: data.profilePicture }));
+        window.location.reload();
+        
       } catch (error) {
         console.error("Login error:", error);
-
+        setLoginError(error);
       }
   };
 
@@ -51,6 +66,8 @@ const Login = () => {
         minHeight: "100vh",
         backgroundColor: "#f3f4f6",
         width: "100%",
+        marginLeft: "-1.25rem",
+        marginTop: "-6rem",
       }}
     >
       <div
@@ -127,7 +144,7 @@ const Login = () => {
               required
             />
           </div>
-
+          {(loginError !== "") && (<p className="text-red-500">{loginError.message}</p>)}
           <button
             type="submit"
             style={{
@@ -155,7 +172,7 @@ const Login = () => {
         >
           Don’t have an account?
           <a
-            href="/createAccount"
+            href="/signup"
             style={{
               color: "#3B82F6",
               textDecoration: "underline",

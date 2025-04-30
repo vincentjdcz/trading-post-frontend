@@ -14,13 +14,16 @@ const MyPosts = () => {
   // State to handle error
   const [error, setError] = useState(null);
   const userId = useSelector(state => state.auth.userId);
+  const isDev = false;
   // useEffect to fetch posts when the component mounts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         //https://trading-post-backend-production.up.railway.app
         //http://localhost:3000
-        const response = await fetch("https://trading-post-backend-production.up.railway.app/api/post/getOwnPosts", {
+        const prodURL = "https://trading-post-backend-production.up.railway.app/api/post/getOwnPosts"
+        const devURL = "http://localhost:3000/api/post/getOwnPosts"
+        const response = await fetch(isDev ? devURL : prodURL, {
           method: 'POST', // Use POST method for retrieving own posts
           credentials: 'include', // Include credentials if you need cookies or authentication
           headers: {
@@ -94,7 +97,13 @@ const MyPosts = () => {
             return (
               <Post
                 key={idx}
+                userName={post.userId.userName}
                 cardApiId={post.cardApiId}
+                cardName={post.cardName}
+                setName={post.setName}
+                setNumber={post.setNumber}
+                setTotal={post.setTotal}
+                setId={post.setId}
                 cardFrontPicture={post.cardFrontPicture}
                 wantsImgs={post.wantsImgs}
               />

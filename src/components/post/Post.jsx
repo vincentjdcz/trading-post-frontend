@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 
-const Post = ({ postId, cardFrontPicture, wantsImgs }) => {
+const Post = ({ postId, userName, cardName, setName, setNumber, setTotal, setId, cardFrontPicture, wantsImgs }) => {
   console.log("IN POST.JSX");
   console.log(wantsImgs);
-
+  console.log("postId: ", postId)
   /*
     const fetchCardImg = async (cardApiId) => {
         try {
@@ -30,6 +30,7 @@ const Post = ({ postId, cardFrontPicture, wantsImgs }) => {
       };
 */
   return (
+    <a href={"/postDetails/" + postId}>
     <div
       key={postId}
       style={{
@@ -40,18 +41,23 @@ const Post = ({ postId, cardFrontPicture, wantsImgs }) => {
         width: "175px",
       }}
     >
-      <p className="font-semibold text-lg">For Trade</p>
+
+      
+      <p className="text-xs">Posted by</p><p className="text-xs font-semibold">{userName}</p>
       <img
-        className="mt-4"
+        className="mt-2"
         src={cardFrontPicture}
-        style={{ width: "150px", height: "205px", objectFit: "cover" }}
+        style={{ width: "150px", height: "205px", objectFit: "cover", borderRadius: "10px" }}
       />
-      <div className="mt-4">
-        <p className="font-semibold text-lg">Wants</p>
+      <p className="font-bold text-base mt-1">{cardName}</p>
+      <p className="text-xs">{setName}</p>
+      <hr className="mt-2 mb-2"/>
+      <div>
+        <p className="font-semibold text-xs">Wants: </p>
         <div
           style={{
             display: "flex",
-            marginTop: "1rem",
+            marginTop: "0.5rem",
             overflowX: "auto",
             width: "100%",
             gap: "1rem", // Adjust the gap size as needed
@@ -61,18 +67,25 @@ const Post = ({ postId, cardFrontPicture, wantsImgs }) => {
             <img
               key={idx}
               src={wantImg}
-              style={{ width: "70px", height: "100px", objectFit: "cover" }}
+              style={{ width: "70px", height: "100px", objectFit: "cover", borderRadius: "10px" }}
             />
           ))}
         </div>
       </div>
     </div>
+    </a>
   );
 };
 
 Post.propTypes = {
   //onSelectCard: PropTypes.func.isRequired, // Validate onSelectCard as a required function
   postId: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired,
+  cardName: PropTypes.string.isRequired,
+  setName: PropTypes.string.isRequired,
+  setNumber: PropTypes.string.isRequired,
+  setTotal: PropTypes.string.isRequired,
+  setId: PropTypes.string.isRequired,
   cardFrontPicture: PropTypes.string.isRequired,
   wantsImgs: PropTypes.array.isRequired,
 };

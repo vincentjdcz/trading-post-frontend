@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import "react-toastify/dist/ReactToastify.css";
+//import Post from "../../src/components/post/Post";
 import Post from "/src/components/post/Post";
-const ExplorePosts = () => {
+import { useSelector } from "react-redux";
+const MyPosts = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
   // State to hold the posts data
   const [posts, setPosts] = useState([]);
   // State to handle loading state
@@ -16,28 +21,27 @@ const ExplorePosts = () => {
       try {
         //https://trading-post-backend-production.up.railway.app
         //http://localhost:3000
-        const prodURL = "https://trading-post-backend-production.up.railway.app/api/post/getOthersPosts"
-        const devURL = "http://localhost:3000/api/post/getOthersPosts"
-        const response = await fetch(isDev ? devURL : prodURL,
-          {
-            method: "POST", // Use POST method for retrieving own posts
-            credentials: "include", // Include credentials if you need cookies or authentication
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId }), // Send userId in the request body
-          }
-        );
+        const prodURL =
+          "https://trading-post-backend-production.up.railway.app/api/post/getOwnPosts";
+        const devURL = "http://localhost:3000/api/post/getOwnPosts";
+        const response = await fetch(isDev ? devURL : prodURL, {
+          method: "POST", // Use POST method for retrieving own posts
+          credentials: "include", // Include credentials if you need cookies or authentication
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }), // Send userId in the request body
+        });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setPosts(data); // Set the posts data in the state
-        console.log(data);
         console.log("posts");
         console.log(posts);
       } catch (error) {
         setError(error.message); // Set error message if the fetch fails
+        console.log(error.message);
       } finally {
         setLoading(false); // Set loading to false after the request is done
       }
@@ -56,8 +60,10 @@ const ExplorePosts = () => {
     return <div>Error: {error}</div>;
   }
 
+  console.log(posts);
+
   return (
-    <div className="min-h-full h-full w-full">
+    <div className="min-h-full h-full mt-2 w-screen">
       <div
         style={{
           display: "flex",
@@ -67,22 +73,28 @@ const ExplorePosts = () => {
           gap: "1rem",
         }}
       >
-        <h2 className="text-2xl font-semibold">EXPLORE POSTS</h2>
+        <div className="bg-white w-screen flex justify-center items-center fixed bottom-0 left-0 h-16">
+          <button
+            onClick={() => navigate("/createPost")}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md w-[80vw] "
+          >
+            Create New Post
+          </button>
+        </div>
 
         <div
-
           style={{
             display: "flex",
             flexWrap: "wrap",
             gap: "8px",
-            
+            width: "100vw",
           }}
         >
           {posts.map((post, idx) => {
             console.log("POST");
             console.log(post);
-            //console.log("POST.WANTSIMGS");
-           // console.log(post.wantsImgs);
+            console.log("POST.WANTSIMGS");
+            console.log(post.wantsImgs);
             return (
               <Post
                 key={idx}
@@ -102,7 +114,7 @@ const ExplorePosts = () => {
         </div>
       </div>
     </div>
-);
+  );
 };
 
-export default ExplorePosts;
+export default MyPosts;

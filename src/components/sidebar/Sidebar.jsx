@@ -1,7 +1,9 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'; // Import the magnifying glass icon
-const Sidebar = () => {
+import PropTypes from 'prop-types';
+const Sidebar = ({isOpen}) => {
   return (
-    <aside className="bg-white text-white w-64 h-screen p-4 fixed left-0 top-16 shadow-lg">
+    (isOpen && 
+    <aside className="bg-white text-white w-64 h-full p-4 mt-16 shadow-lg">
       <div>
         {/* Search Bar */}
         <div className="flex items-center">
@@ -16,7 +18,11 @@ const Sidebar = () => {
           </div>
       </div>
     </aside>
+    )
   );
 };
 
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool.isRequired
+}
 export default Sidebar;

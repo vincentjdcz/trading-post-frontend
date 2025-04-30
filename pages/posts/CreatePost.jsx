@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from 'react-redux';
-
+import imageCompression from 'browser-image-compression'
 import Modal from "react-modal";
 //import ChooseCardModal from "../../src/components/modal/ChooseCardModal";
 //import CardFillerSkeleton from "../../src/components/skeleton/CardFillerSkeleton";
@@ -12,6 +12,11 @@ import "react-toastify/dist/ReactToastify.css";
 const CreatePosts = () => {
   // State to hold form inputs
   const [cardApiId, setCardApiId] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [setName, setSetName] = useState(""); //TODO: ADD THESE NEW FIELDS TO EACH POST
+  const [setNumber, setSetNumber] = useState(""); //the card's number in the set
+  const [setTotal, setSetTotal] = useState("");
+  const [setId, setSetId] = useState("");
   const [cardFrontPicture, setCardFrontPicture] = useState(null);
   const [cardBackPicture, setCardBackPicture] = useState("");
   const [wants, setWants] = useState([]);
@@ -22,7 +27,7 @@ const CreatePosts = () => {
   const [cardApiSmallImage, setCardApiSmallImage] = useState("");
   const [wantsModalIsOpen, setWantsModalIsOpen] = useState(false);
   const [cardWantApiId, setCardWantApiId] = useState("");
-
+  const isDev = false;
   const userId = useSelector(state => state.auth.userId);
   const fetchCardImg = async (cardApiId) => {
     try {
@@ -48,32 +53,80 @@ const CreatePosts = () => {
     }
   };
 
-  const testSetCardApiId = (CardApiId) => {
+  const setCardMetaData = (CardApiId, CardName, SetName, SetNumber, SetTotal, SetId) => { //TODO: MAybe rename to setCardData
     console.log("testsetcardapiid");
     setCardApiId(CardApiId);
+    setCardName(CardName);
+    setSetName(SetName);
+    setSetNumber(SetNumber);
+    setSetTotal(SetTotal);
+    setSetId(SetId);
     console.log("CardApiId: ", cardApiId);
+    console.log("cardName: ", cardName);
+    console.log("setName: ", setName);
+    console.log("setNumber: ", setNumber);
+    console.log("setTotal: ", setTotal);
+    console.log("setId: ", setId)
   };
 
-  const handleFileChangeCardFront = (e) => {
+  const handleFileChangeCardFront = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCardFrontPicture(reader.result); // Set the Base64 string as the image source
-      };
-      reader.readAsDataURL(file); // Convert the file to Base64 string
+
+    if(!file) return;
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+      initialQuality: 0.9
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      //setCardFrontPicture(file);//replaced OG code
+      setCardFrontPicture(compressedFile);//replaced OG code
+    } catch (error) {
+      console.error("Image compression error: ", error);
     }
+    
+    //if (file) {
+    //  const reader = new FileReader();
+    //  reader.onloadend = () => {
+    //    setCardFrontPicture(reader.result); // Set the Base64 string as the image source
+    //  };
+    //  reader.readAsDataURL(file); // Convert the file to Base64 string
+    //}
   };
 
-  const handleFileChangeCardBack = (e) => {
+  const handleFileChangeCardBack = async(e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCardBackPicture(reader.result); // Set the Base64 string as the image source
-      };
-      reader.readAsDataURL(file); // Convert the file to Base64 string
+
+    if(!file) return;
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+      initialQuality: 0.9
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      //setCardFrontPicture(file);//replaced OG code
+      setCardBackPicture(compressedFile);//replaced OG code
+    } catch (error) {
+      console.error("Image compression error: ", error);
     }
+   
+    // const file = e.target.files[0];
+   // setCardBackPicture(file);
+    //if (file) {
+    //  const reader = new FileReader();
+    //  reader.onloadend = () => {
+    //    setCardBackPicture(reader.result); // Set the Base64 string as the image source
+    //  };
+    //  reader.readAsDataURL(file); // Convert the file to Base64 string
+    //}
   };
 
   const navigate = useNavigate();
@@ -88,13 +141,65 @@ const CreatePosts = () => {
         throw new Error("No card selected");
       }
       console.log("Creating Post, userId: ", userId)
+      
+
+      //get secure url from our server
+      const prodURL = "https://trading-post-backend-production.up.railway.app/api/s3url";
+      const devURL = "http://localhost:3000/api/s3url";
+      const {url} = await fetch(isDev ? devURL : prodURL).then(res => res.json())
+      
+      await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        body: cardFrontPicture
+      })
+
+      const cardFrontPictureUrl = url.split('?')[0]
+      console.log("CARD FRONT URL: " + cardFrontPictureUrl);
+      //setCardFrontPicture(cardFrontPictureUrl);
+      console.log("cardFrontPicture: " + cardFrontPicture)
+      // post the image directly to the s3 bucket
+
+      //get secure url from our server
+      const {url:url2} = await fetch(isDev ? devURL : prodURL).then(res => res.json())
+      console.log("URL2: " + url2);
+      await fetch(url2, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        body: cardBackPicture
+      })
+
+      const cardBackPictureUrl = url2.split('?')[0]
+      console.log("CARD BACK URL: " + cardBackPictureUrl);
+      //setCardBackPicture(cardBackPictureUrl);
+      console.log("cardBackPicture: " + cardBackPicture);
+
+      // post the image directly to the s3 bucket
+
+      //After changing to s3
+      
+
       const postData = {
         userId,
         cardApiId,
-        cardFrontPicture,
-        cardBackPicture,
+        cardName,
+        setName,
+        setNumber,
+        setTotal,
+        setId,
+        cardFrontPicture: cardFrontPictureUrl,
+        //cardFrontPictureUrl,
+        cardBackPicture: cardBackPictureUrl,
+        //cardBackPictureUrl,
         wants,
+        wantsImgs
       };
+
+      console.log("POST DATA: ", postData);
 
       // Convert post data to JSON string
       const jsonString = JSON.stringify(postData);
@@ -115,21 +220,17 @@ const CreatePosts = () => {
 
       //https://trading-post-backend-production.up.railway.app
       //http://localhost:3000
+      const prodURLCreatePost = "https://trading-post-backend-production.up.railway.app/api/post/createPost"
+      const devURLCreatePost = "http://localhost:3000/api/post/createPost"
       const response = await fetch(
-        "https://trading-post-backend-production.up.railway.app/api/post/createPost",
+
+        isDev ? devURLCreatePost : prodURLCreatePost,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            userId,
-            cardApiId,
-            cardFrontPicture,
-            cardBackPicture,
-            wants,
-            wantsImgs
-          }),
+          body: jsonString,
         }
       );
 
@@ -141,7 +242,7 @@ const CreatePosts = () => {
       if (data) {
         toast.success("Post created successfully!");
         setTimeout(() => {
-          navigate("/my-posts");
+          navigate("/myProfile");
         }, 3000)
       }
       // Optionally redirect or update state after successful creation
@@ -175,14 +276,15 @@ const CreatePosts = () => {
   };
 
   const addToWants = async () => {
-    setWants(prevWants => [...prevWants, cardWantApiId]);
+    
     const wantsImg = await fetchCardImg(cardWantApiId);
     console.log("wantsImg ", wantsImg);
     console.log("wantsimgs before");
     console.log(wantsImgs);
-    setWantsImgs(prevWantsImgs => [...prevWantsImgs, wantsImg]);
+    await setWantsImgs(prevWantsImgs => [...prevWantsImgs, wantsImg]);
     console.log("wantsimgs after");
     console.log(wantsImgs);
+    setWants(prevWants => [...prevWants, cardWantApiId]);
     setWantsModalIsOpen(false);
   };
 
@@ -237,9 +339,10 @@ const CreatePosts = () => {
         }}
       >
         <ChooseCardModal
-          setCardApiId={testSetCardApiId}
+          setCardMetaData={setCardMetaData}
           closeModal={closeModal}
           selectCard={selectCard}
+
         />
       </Modal>
 
@@ -267,7 +370,7 @@ const CreatePosts = () => {
       >
         WANTS MODAL
         <ChooseCardModal
-          setCardApiId={setCardWantApiId}
+          setCardMetaData={setCardWantApiId}
           closeModal={closeWantsModal}
           selectCard={addToWants}
         />
